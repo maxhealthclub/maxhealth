@@ -30,6 +30,20 @@ export default function HomePage() {
   const { language, translations } = useLanguage()
   const t = translations[language]
 
+  // Mock data for recent activity
+  const recentActivity = {
+    lastPT: {
+      date: "2 days ago",
+      trainer: "Jeroen van Rooien",
+      type: "Strength Training"
+    },
+    lastBarPurchase: {
+      date: "3 days ago",
+      items: ["Protein Shake", "Energy Bar"],
+      total: "€12.50"
+    }
+  }
+
   const handleNavigation = (path: string, tabId: string) => {
     router.push(path)
     setActiveTab(tabId)
@@ -91,7 +105,12 @@ export default function HomePage() {
                     </div>
                     <div>
                       <p className="font-medium">{t.lastPT}</p>
-                      <p className={`text-sm ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>2 days ago</p>
+                      <p className={`text-sm ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>
+                        {recentActivity.lastPT.date} • {recentActivity.lastPT.trainer}
+                      </p>
+                      <p className={`text-xs ${isDarkMode ? 'text-gray-500' : 'text-gray-600'}`}>
+                        {recentActivity.lastPT.type}
+                      </p>
                     </div>
                   </div>
                   <Button 
@@ -111,7 +130,12 @@ export default function HomePage() {
                     </div>
                     <div>
                       <p className="font-medium">{t.lastBarPurchase}</p>
-                      <p className={`text-sm ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>3 days ago</p>
+                      <p className={`text-sm ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>
+                        {recentActivity.lastBarPurchase.date}
+                      </p>
+                      <p className={`text-xs ${isDarkMode ? 'text-gray-500' : 'text-gray-600'}`}>
+                        {recentActivity.lastBarPurchase.items.join(", ")} • {recentActivity.lastBarPurchase.total}
+                      </p>
                     </div>
                   </div>
                   <Button 

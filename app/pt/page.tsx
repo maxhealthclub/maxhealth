@@ -113,41 +113,37 @@ export default function PTPage() {
         <div className="mb-6">
           <h2 className="text-lg font-semibold mb-3">{t.ptPackages}</h2>
           <div className="space-y-4">
-            <Card className={`${isDarkMode ? 'bg-[#1A1A1A] text-white hover:bg-[#252525]' : 'bg-gray-50 text-[#101010] hover:bg-gray-100'} border-none rounded-xl shadow-lg cursor-pointer transition-colors`}>
-              <CardContent className="p-4">
-                <div className="flex justify-between items-center">
-                  <div>
-                    <h3 className="font-medium">{t.basicPackage}</h3>
-                    <p className={`text-sm ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>5 sessions</p>
+            {ptData.tiers.map((tier) => (
+              <Card 
+                key={tier.name}
+                className={`${isDarkMode ? 'bg-[#1A1A1A] text-white hover:bg-[#252525]' : 'bg-gray-50 text-[#101010] hover:bg-gray-100'} border-none rounded-xl shadow-lg cursor-pointer transition-colors`}
+              >
+                <CardContent className="p-4">
+                  <div className="flex justify-between items-center">
+                    <div>
+                      <h3 className="font-medium">{tier.name}</h3>
+                      <p className={`text-sm ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>
+                        {tier.sessions} {t.sessions}
+                      </p>
+                      <p className={`text-sm ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>
+                        {tier.description}
+                      </p>
+                    </div>
+                    <div className="text-right">
+                      <p className="font-medium">€{tier.price}</p>
+                      <Button 
+                        variant="ghost" 
+                        size="sm" 
+                        className="text-[#D7AD41] mt-2"
+                        onClick={() => {/* TODO: Implement purchase flow */}}
+                      >
+                        {t.purchase}
+                      </Button>
+                    </div>
                   </div>
-                  <p className="font-medium">€250</p>
-                </div>
-              </CardContent>
-            </Card>
-
-            <Card className={`${isDarkMode ? 'bg-[#1A1A1A] text-white hover:bg-[#252525]' : 'bg-gray-50 text-[#101010] hover:bg-gray-100'} border-none rounded-xl shadow-lg cursor-pointer transition-colors`}>
-              <CardContent className="p-4">
-                <div className="flex justify-between items-center">
-                  <div>
-                    <h3 className="font-medium">{t.standardPackage}</h3>
-                    <p className={`text-sm ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>10 sessions</p>
-                  </div>
-                  <p className="font-medium">€450</p>
-                </div>
-              </CardContent>
-            </Card>
-
-            <Card className={`${isDarkMode ? 'bg-[#1A1A1A] text-white hover:bg-[#252525]' : 'bg-gray-50 text-[#101010] hover:bg-gray-100'} border-none rounded-xl shadow-lg cursor-pointer transition-colors`}>
-              <CardContent className="p-4">
-                <div className="flex justify-between items-center">
-                  <div>
-                    <h3 className="font-medium">{t.premiumPackage}</h3>
-                    <p className={`text-sm ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>20 sessions</p>
-                  </div>
-                  <p className="font-medium">€800</p>
-                </div>
-              </CardContent>
-            </Card>
+                </CardContent>
+              </Card>
+            ))}
           </div>
         </div>
       </main>
