@@ -26,74 +26,15 @@ import { Separator } from "@/components/ui/separator"
 import { Badge } from "@/components/ui/badge"
 import { Switch } from "@/components/ui/switch"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+import { useLanguage } from "../contexts/LanguageContext"
 
 export default function ProfilePage() {
   const [activeTab, setActiveTab] = useState("profile")
-  const [isDarkMode, setIsDarkMode] = useState(true)
-  const [language, setLanguage] = useState(() => {
-    if (typeof window !== 'undefined') {
-      return localStorage.getItem('language') || 'english'
-    }
-    return 'english'
-  })
+  const [isDarkMode, setIsDarkMode] = useState(false)
+  const { language, setLanguage, translations } = useLanguage()
   const router = useRouter()
 
-  const translations = {
-    english: {
-      profile: "Profile",
-      welcome: "Welcome back",
-      membership: "Membership",
-      yourTrainer: "Your Trainer",
-      trainer: "Trainer",
-      contact: "Contact",
-      personalTraining: "Personal Training",
-      sessionsLeft: "PT sessions left",
-      financeOverview: "Finance Overview",
-      unpaidInvoices: "Unpaid Invoices",
-      paidInvoices: "Paid Invoices",
-      barBalance: "Bar Balance",
-      settings: "Settings & Preferences",
-      invoiceReminders: "Invoice Reminders",
-      ptSessionAlerts: "PT Session Alerts",
-      language: "Language",
-      darkMode: "Dark Mode",
-      logOut: "Log Out",
-      deleteAccount: "Delete Account",
-      viewDetails: "View Details",
-      home: "Home",
-      invoices: "Invoices",
-      bar: "Bar",
-      pt: "PT",
-    },
-    dutch: {
-      profile: "Profiel",
-      welcome: "Welkom terug",
-      membership: "Lidmaatschap",
-      yourTrainer: "Jouw Trainer",
-      trainer: "Trainer",
-      contact: "Contact",
-      personalTraining: "Persoonlijke Training",
-      sessionsLeft: "PT sessies over",
-      financeOverview: "Financieel Overzicht",
-      unpaidInvoices: "Openstaande Facturen",
-      paidInvoices: "Betaalde Facturen",
-      barBalance: "Bar Saldo",
-      settings: "Instellingen & Voorkeuren",
-      invoiceReminders: "Factuurherinneringen",
-      ptSessionAlerts: "PT Sessie Meldingen",
-      language: "Taal",
-      darkMode: "Donkere Modus",
-      logOut: "Uitloggen",
-      deleteAccount: "Account Verwijderen",
-      viewDetails: "Details Bekijken",
-      home: "Home",
-      invoices: "Facturen",
-      bar: "Bar",
-      pt: "PT",
-    }
-  }
-
-  const t = translations[language as keyof typeof translations]
+  const t = translations[language]
 
   // Mock user data
   const userData = {
@@ -134,11 +75,6 @@ export default function ProfilePage() {
     // localStorage.setItem('darkMode', checked.toString())
   }
 
-  const handleLanguageChange = (value: string) => {
-    setLanguage(value)
-    localStorage.setItem('language', value)
-  }
-
   const handleEditProfile = () => {
     router.push("/profile/edit")
   }
@@ -171,7 +107,7 @@ export default function ProfilePage() {
                     <h2 className="text-xl font-semibold">{userData.name}</h2>
                     <Button variant="ghost" size="icon" className="h-8 w-8 text-[#D7AD41]" onClick={handleEditProfile}>
                       <Edit className="h-4 w-4" />
-                      <span className="sr-only">Edit Profile</span>
+                      <span className="sr-only">{t.edit}</span>
                     </Button>
                   </div>
                   <p className="text-gray-400">
@@ -236,7 +172,7 @@ export default function ProfilePage() {
                 <Button
                   variant="ghost"
                   size="sm"
-                  className="text-gray-400 hover:text-white"
+                  className="text-[#D7AD41] hover:text-[#D7AD41]/90 hover:bg-[#D7AD41]/10"
                   onClick={() => router.push("/pt")}
                 >
                   {t.viewDetails}
@@ -327,13 +263,13 @@ export default function ProfilePage() {
                   <Globe className="h-5 w-5 text-gray-400" />
                   <p>{t.language}</p>
                 </div>
-                <Select value={language} onValueChange={handleLanguageChange}>
+                <Select value={language} onValueChange={setLanguage}>
                   <SelectTrigger className="w-32 bg-[#D7AD41] text-[#101010] hover:bg-[#D7AD41]/90 font-medium shadow-md border-none">
                     <SelectValue placeholder={t.language} />
                   </SelectTrigger>
                   <SelectContent>
                     <SelectItem value="english">English</SelectItem>
-                    <SelectItem value="dutch">Dutch</SelectItem>
+                    <SelectItem value="dutch">Nederlands</SelectItem>
                   </SelectContent>
                 </Select>
               </div>
@@ -365,7 +301,7 @@ export default function ProfilePage() {
             <Button 
               variant="ghost" 
               size="sm" 
-              className={`text-xs ${isDarkMode ? 'text-gray-500 hover:text-gray-400' : 'text-gray-600 hover:text-gray-700'}`}
+              className="text-red-500 hover:text-red-600 hover:bg-red-50"
             >
               <AlertTriangle className="h-3 w-3 mr-1" />
               {t.deleteAccount}
@@ -380,7 +316,7 @@ export default function ProfilePage() {
           {[
             { id: "home", icon: Home, label: t.home, path: "/" },
             { id: "invoices", icon: FileText, label: t.invoices, path: "/invoices" },
-            { id: "bar", icon: CreditCard, label: t.bar, path: "/bar" },
+            { id: "bar", icon: Wallet, label: t.bar, path: "/bar" },
             { id: "pt", icon: Dumbbell, label: t.pt, path: "/pt" },
             { id: "profile", icon: User, label: t.profile, path: "/profile" },
           ].map((item) => (
