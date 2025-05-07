@@ -30,7 +30,12 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 export default function ProfilePage() {
   const [activeTab, setActiveTab] = useState("profile")
   const [isDarkMode, setIsDarkMode] = useState(true)
-  const [language, setLanguage] = useState("english")
+  const [language, setLanguage] = useState(() => {
+    if (typeof window !== 'undefined') {
+      return localStorage.getItem('language') || 'english'
+    }
+    return 'english'
+  })
   const router = useRouter()
 
   const translations = {
@@ -131,8 +136,7 @@ export default function ProfilePage() {
 
   const handleLanguageChange = (value: string) => {
     setLanguage(value)
-    // Here you would typically also save this preference to localStorage or a backend
-    // localStorage.setItem('language', value)
+    localStorage.setItem('language', value)
   }
 
   const handleEditProfile = () => {
