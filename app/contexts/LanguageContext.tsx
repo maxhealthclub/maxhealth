@@ -67,6 +67,12 @@ const translations = {
     recentActivity: "Recent Activity",
     lastPT: "Last PT Session",
     lastBarPurchase: "Last Bar Purchase",
+    currentPTStatus: "Current PT Status",
+    bookSession: "Book Session",
+    contactTrainer: "Contact Trainer",
+    basicPackage: "Basic Package",
+    standardPackage: "Standard Package",
+    premiumPackage: "Premium Package",
   },
   dutch: {
     // Home page
@@ -124,6 +130,12 @@ const translations = {
     recentActivity: "Recente Activiteit",
     lastPT: "Laatste PT Sessie",
     lastBarPurchase: "Laatste Bar Aankoop",
+    currentPTStatus: "Huidige PT Status",
+    bookSession: "Sessie Boeken",
+    contactTrainer: "Trainer Contacten",
+    basicPackage: "Basis Pakket",
+    standardPackage: "Standaard Pakket",
+    premiumPackage: "Premium Pakket",
   }
 }
 
