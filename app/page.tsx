@@ -18,9 +18,14 @@ export default function HomePage() {
   const [activeTab, setActiveTab] = useState("home")
   const [isDarkMode, setIsDarkMode] = useState(() => {
     if (typeof window !== 'undefined') {
-      return localStorage.getItem('darkMode') === 'true'
+      const savedMode = localStorage.getItem('darkMode')
+      if (savedMode === null) {
+        localStorage.setItem('darkMode', 'true')
+        return true
+      }
+      return savedMode === 'true'
     }
-    return false
+    return true
   })
   const { language, translations } = useLanguage()
   const t = translations[language]
@@ -43,7 +48,10 @@ export default function HomePage() {
         <div className="mb-6">
           <h2 className="text-lg font-semibold mb-3">{t.quickActions}</h2>
           <div className="grid grid-cols-2 gap-3">
-            <Card className={`${isDarkMode ? 'bg-[#1A1A1A] text-white hover:bg-[#252525]' : 'bg-gray-50 text-[#101010] hover:bg-gray-100'} border-none rounded-xl shadow-lg cursor-pointer transition-colors`}>
+            <Card 
+              className={`${isDarkMode ? 'bg-[#1A1A1A] text-white hover:bg-[#252525]' : 'bg-gray-50 text-[#101010] hover:bg-gray-100'} border-none rounded-xl shadow-lg cursor-pointer transition-colors`}
+              onClick={() => router.push('/pt')}
+            >
               <CardContent className="p-4">
                 <div className="flex flex-col items-center text-center gap-2">
                   <div className="bg-[#D7AD41]/20 p-2 rounded-full">
@@ -54,7 +62,10 @@ export default function HomePage() {
               </CardContent>
             </Card>
 
-            <Card className={`${isDarkMode ? 'bg-[#1A1A1A] text-white hover:bg-[#252525]' : 'bg-gray-50 text-[#101010] hover:bg-gray-100'} border-none rounded-xl shadow-lg cursor-pointer transition-colors`}>
+            <Card 
+              className={`${isDarkMode ? 'bg-[#1A1A1A] text-white hover:bg-[#252525]' : 'bg-gray-50 text-[#101010] hover:bg-gray-100'} border-none rounded-xl shadow-lg cursor-pointer transition-colors`}
+              onClick={() => router.push('/invoices')}
+            >
               <CardContent className="p-4">
                 <div className="flex flex-col items-center text-center gap-2">
                   <div className="bg-[#D7AD41]/20 p-2 rounded-full">
@@ -83,7 +94,12 @@ export default function HomePage() {
                       <p className={`text-sm ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>2 days ago</p>
                     </div>
                   </div>
-                  <Button variant="ghost" size="sm" className="text-[#D7AD41]">
+                  <Button 
+                    variant="ghost" 
+                    size="sm" 
+                    className="text-[#D7AD41]"
+                    onClick={() => router.push('/pt')}
+                  >
                     {t.viewDetails}
                   </Button>
                 </div>
@@ -98,7 +114,12 @@ export default function HomePage() {
                       <p className={`text-sm ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>3 days ago</p>
                     </div>
                   </div>
-                  <Button variant="ghost" size="sm" className="text-[#D7AD41]">
+                  <Button 
+                    variant="ghost" 
+                    size="sm" 
+                    className="text-[#D7AD41]"
+                    onClick={() => router.push('/bar')}
+                  >
                     {t.viewDetails}
                   </Button>
                 </div>

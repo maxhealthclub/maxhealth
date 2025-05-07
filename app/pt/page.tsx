@@ -18,9 +18,14 @@ export default function PTPage() {
   const [activeTab, setActiveTab] = useState("pt")
   const [isDarkMode, setIsDarkMode] = useState(() => {
     if (typeof window !== 'undefined') {
-      return localStorage.getItem('darkMode') === 'true'
+      const savedMode = localStorage.getItem('darkMode')
+      if (savedMode === null) {
+        localStorage.setItem('darkMode', 'true')
+        return true
+      }
+      return savedMode === 'true'
     }
-    return false
+    return true
   })
   const { language, translations } = useLanguage()
   const t = translations[language]
