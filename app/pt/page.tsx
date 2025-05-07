@@ -16,6 +16,12 @@ import { useLanguage } from "../contexts/LanguageContext"
 export default function PTPage() {
   const router = useRouter()
   const [activeTab, setActiveTab] = useState("pt")
+  const [isDarkMode, setIsDarkMode] = useState(() => {
+    if (typeof window !== 'undefined') {
+      return localStorage.getItem('darkMode') === 'true'
+    }
+    return false
+  })
   const { language, translations } = useLanguage()
   const t = translations[language]
 
@@ -61,9 +67,9 @@ export default function PTPage() {
   }
 
   return (
-    <div className="flex flex-col min-h-screen bg-white text-[#101010]">
+    <div className={`flex flex-col min-h-screen ${isDarkMode ? 'bg-[#101010] text-white' : 'bg-white text-[#101010]'}`}>
       {/* Header with safe area padding for notch */}
-      <header className="pt-12 pb-4 px-5 flex items-center justify-between bg-white sticky top-0 z-10">
+      <header className={`pt-12 pb-4 px-5 flex items-center justify-between ${isDarkMode ? 'bg-[#101010]' : 'bg-white'} sticky top-0 z-10`}>
         <h1 className="text-xl font-semibold">{t.personalTraining}</h1>
       </header>
 
@@ -71,26 +77,28 @@ export default function PTPage() {
       <main className="flex-1 px-5 pb-28 overflow-auto">
         {/* Current PT Status */}
         <div className="mb-6">
-          <Card className="bg-gray-50 border-none rounded-xl shadow-lg">
+          <h2 className="text-lg font-semibold mb-3">{t.currentPTStatus}</h2>
+          <Card className={`${isDarkMode ? 'bg-[#1A1A1A] text-white' : 'bg-gray-50 text-[#101010]'} border-none rounded-xl shadow-lg`}>
             <CardContent className="p-4">
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-3">
-                  <div className="bg-[#D7AD41]/20 p-2 rounded-full">
-                    <Dumbbell className="h-5 w-5 text-[#D7AD41]" />
-                  </div>
+              <div className="space-y-4">
+                <div className="flex items-center justify-between">
                   <div>
-                    <p className="font-medium">
-                      {ptData.sessionsLeft} {t.sessionsLeft}
-                    </p>
-                    <p className="text-sm text-gray-500">{t.withTrainer} {ptData.trainer.name}</p>
+                    <p className="font-medium">{t.sessionsLeft}</p>
+                    <p className={`text-sm ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>5 sessions</p>
                   </div>
+                  <Button variant="ghost" size="sm" className="text-[#D7AD41]">
+                    {t.bookSession}
+                  </Button>
                 </div>
-                <Button
-                  className="bg-[#D7AD41] text-[#101010] hover:bg-[#D7AD41]/90 font-medium shadow-md"
-                  onClick={() => router.push("/pt/schedule")}
-                >
-                  {t.scheduleSession}
-                </Button>
+                <div className="flex items-center justify-between">
+                  <div>
+                    <p className="font-medium">{t.yourTrainer}</p>
+                    <p className={`text-sm ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>John Doe</p>
+                  </div>
+                  <Button variant="ghost" size="sm" className="text-[#D7AD41]">
+                    {t.contactTrainer}
+                  </Button>
+                </div>
               </div>
             </CardContent>
           </Card>
@@ -100,34 +108,47 @@ export default function PTPage() {
         <div className="mb-6">
           <h2 className="text-lg font-semibold mb-3">{t.ptPackages}</h2>
           <div className="space-y-4">
-            {ptData.tiers.map((tier) => (
-              <Card key={tier.name} className="bg-gray-50 border-none rounded-xl shadow-lg">
-                <CardContent className="p-4">
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <h3 className="font-semibold">{tier.name}</h3>
-                      <p className="text-sm text-gray-500">{tier.description}</p>
-                      <p className="text-sm text-gray-500 mt-1">{tier.sessions} {t.sessions}</p>
-                    </div>
-                    <div className="text-right">
-                      <p className="font-semibold">€{tier.price}</p>
-                      <Button
-                        className="mt-2 bg-[#D7AD41] text-[#101010] hover:bg-[#D7AD41]/90 font-medium shadow-md"
-                        onClick={() => router.push(`/pt/purchase/${tier.name.toLowerCase()}`)}
-                      >
-                        {t.purchase}
-                      </Button>
-                    </div>
+            <Card className={`${isDarkMode ? 'bg-[#1A1A1A] text-white hover:bg-[#252525]' : 'bg-gray-50 text-[#101010] hover:bg-gray-100'} border-none rounded-xl shadow-lg cursor-pointer transition-colors`}>
+              <CardContent className="p-4">
+                <div className="flex justify-between items-center">
+                  <div>
+                    <h3 className="font-medium">{t.basicPackage}</h3>
+                    <p className={`text-sm ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>5 sessions</p>
                   </div>
-                </CardContent>
-              </Card>
-            ))}
+                  <p className="font-medium">€250</p>
+                </div>
+              </CardContent>
+            </Card>
+
+            <Card className={`${isDarkMode ? 'bg-[#1A1A1A] text-white hover:bg-[#252525]' : 'bg-gray-50 text-[#101010] hover:bg-gray-100'} border-none rounded-xl shadow-lg cursor-pointer transition-colors`}>
+              <CardContent className="p-4">
+                <div className="flex justify-between items-center">
+                  <div>
+                    <h3 className="font-medium">{t.standardPackage}</h3>
+                    <p className={`text-sm ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>10 sessions</p>
+                  </div>
+                  <p className="font-medium">€450</p>
+                </div>
+              </CardContent>
+            </Card>
+
+            <Card className={`${isDarkMode ? 'bg-[#1A1A1A] text-white hover:bg-[#252525]' : 'bg-gray-50 text-[#101010] hover:bg-gray-100'} border-none rounded-xl shadow-lg cursor-pointer transition-colors`}>
+              <CardContent className="p-4">
+                <div className="flex justify-between items-center">
+                  <div>
+                    <h3 className="font-medium">{t.premiumPackage}</h3>
+                    <p className={`text-sm ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>20 sessions</p>
+                  </div>
+                  <p className="font-medium">€800</p>
+                </div>
+              </CardContent>
+            </Card>
           </div>
         </div>
       </main>
 
       {/* Bottom Navigation - iOS style with safe area padding */}
-      <nav className="fixed bottom-0 w-full bg-white border-t border-gray-200 pb-8 pt-2 shadow-lg z-20">
+      <nav className={`fixed bottom-0 w-full ${isDarkMode ? 'bg-[#1A1A1A] border-[#2A2A2A]' : 'bg-white border-gray-200'} border-t pb-8 pt-2 shadow-lg z-20`}>
         <div className="flex justify-around">
           {[
             { id: "home", icon: Home, label: t.home, path: "/" },
@@ -139,11 +160,11 @@ export default function PTPage() {
             <button
               key={item.id}
               className={`flex flex-col items-center py-2 px-5 rounded-lg ${
-                activeTab === item.id ? "text-[#D7AD41]" : "text-gray-600"
+                activeTab === item.id ? "text-[#D7AD41]" : isDarkMode ? "text-gray-400" : "text-gray-600"
               }`}
               onClick={() => handleNavigation(item.path, item.id)}
             >
-              <item.icon className={`h-6 w-6 ${activeTab === item.id ? "text-[#D7AD41]" : "text-gray-600"}`} />
+              <item.icon className={`h-6 w-6 ${activeTab === item.id ? "text-[#D7AD41]" : isDarkMode ? "text-gray-400" : "text-gray-600"}`} />
               <span className={`text-xs mt-1 ${activeTab === item.id ? "font-medium" : ""}`}>{item.label}</span>
             </button>
           ))}

@@ -30,7 +30,12 @@ import { useLanguage } from "../contexts/LanguageContext"
 
 export default function ProfilePage() {
   const [activeTab, setActiveTab] = useState("profile")
-  const [isDarkMode, setIsDarkMode] = useState(false)
+  const [isDarkMode, setIsDarkMode] = useState(() => {
+    if (typeof window !== 'undefined') {
+      return localStorage.getItem('darkMode') === 'true'
+    }
+    return false
+  })
   const { language, setLanguage, translations } = useLanguage()
   const router = useRouter()
 
@@ -71,8 +76,7 @@ export default function ProfilePage() {
 
   const handleDarkModeToggle = (checked: boolean) => {
     setIsDarkMode(checked)
-    // Here you would typically also save this preference to localStorage or a backend
-    // localStorage.setItem('darkMode', checked.toString())
+    localStorage.setItem('darkMode', checked.toString())
   }
 
   const handleEditProfile = () => {
