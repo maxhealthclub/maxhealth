@@ -225,7 +225,7 @@ export default function ProfilePage() {
                   </div>
                   <div>
                     <p className="font-medium">
-                      {t.sessionsLeft.replace('{count}', userData.ptSessions.toString())}
+                      {userData.ptSessions} {t.sessionsLeft}
                     </p>
                   </div>
                 </div>
