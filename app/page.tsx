@@ -8,6 +8,8 @@ import {
   Wallet,
   Home,
   User,
+  CreditCard,
+  AlertTriangle,
 } from "lucide-react"
 import { Card, CardContent } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
@@ -30,7 +32,20 @@ export default function HomePage() {
   const { language, translations } = useLanguage()
   const t = translations[language]
 
-  // Mock data for recent activity
+  // Mock data for recent activity and user info
+  const userData = {
+    membership: {
+      type: "Stay Fit",
+      price: 99.5,
+      nextPayment: "May 1, 2025"
+    },
+    unpaidInvoices: {
+      count: 1,
+      amount: 99.5,
+      dueDate: "May 1, 2025"
+    }
+  }
+
   const recentActivity = {
     lastPT: {
       date: "2 days ago",
@@ -58,6 +73,57 @@ export default function HomePage() {
 
       {/* Main Content - Scrollable area */}
       <main className="flex-1 px-5 pb-28 overflow-auto">
+        {/* Membership Status */}
+        <div className="mb-6">
+          <Card className={`${isDarkMode ? 'bg-[#1A1A1A] text-white' : 'bg-gray-50 text-[#101010]'} border-none rounded-xl shadow-lg`}>
+            <CardContent className="p-4">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-sm text-gray-400">{t.membership}</p>
+                  <p className="text-lg font-semibold">{userData.membership.type}</p>
+                  <p className={`text-sm ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>
+                    Next payment: {userData.membership.nextPayment}
+                  </p>
+                </div>
+                <div className="text-right">
+                  <p className="text-sm text-gray-400">{t.membershipPrice}</p>
+                  <p className="text-lg font-semibold">€{userData.membership.price.toFixed(2)}</p>
+                  <p className="text-sm text-gray-400">/month</p>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+
+        {/* Unpaid Invoices */}
+        {userData.unpaidInvoices.count > 0 && (
+          <div className="mb-6">
+            <Card className={`${isDarkMode ? 'bg-[#1A1A1A] text-white' : 'bg-gray-50 text-[#101010]'} border-none rounded-xl shadow-lg`}>
+              <CardContent className="p-4">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-3">
+                    <div className="bg-red-500/20 p-2 rounded-full">
+                      <AlertTriangle className="h-5 w-5 text-red-500" />
+                    </div>
+                    <div>
+                      <p className="font-medium">{t.unpaidInvoices}</p>
+                      <p className={`text-sm ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>
+                        {userData.unpaidInvoices.count} {userData.unpaidInvoices.count === 1 ? 'invoice' : 'invoices'} • Due {userData.unpaidInvoices.dueDate}
+                      </p>
+                    </div>
+                  </div>
+                  <Button 
+                    className="bg-[#D7AD41] text-[#101010] hover:bg-[#D7AD41]/90"
+                    onClick={() => router.push('/invoices')}
+                  >
+                    Pay Now
+                  </Button>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+        )}
+
         {/* Quick Actions */}
         <div className="mb-6">
           <h2 className="text-lg font-semibold mb-3">{t.quickActions}</h2>
