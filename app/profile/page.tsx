@@ -54,7 +54,7 @@ export default function ProfilePage() {
     ptSessions: 2,
     unpaidAmount: 99.50,
     paidCount: 12,
-    barBalance: 12.5,
+    barBalance: 14.25,
   }
 
   const handleNavigation = (path: string, tabId: string) => {
@@ -232,7 +232,7 @@ export default function ProfilePage() {
                   </div>
                   <p className="text-sm text-gray-400">{t.unpaidInvoices}</p>
                   <div className="flex items-center gap-2">
-                    <p className="text-xl font-semibold">{userData.paidCount}</p>
+                    <p className="text-xl font-semibold">1</p>
                     <p className="text-sm text-gray-400">(€{userData.unpaidAmount.toFixed(2)})</p>
                   </div>
                 </div>
