@@ -18,12 +18,12 @@ export default function Dashboard() {
   const userData = {
     firstName: "Thomas",
     profileImage: "/placeholder.svg?height=40&width=40",
-    unpaidBalance: 54.0,
+    unpaidBalance: 99.50,
     barCredit: 12.5,
     ptSessionsLeft: 2,
     recentActivity: [
       { id: 1, type: "Bar Purchase", amount: 8.5, date: "Today, 14:30" },
-      { id: 2, type: "Invoice #1234", amount: 54.0, status: "Unpaid", date: "Yesterday" },
+      { id: 2, type: "Invoice #1234", amount: 99.50, status: "Unpaid", date: "Yesterday" },
       { id: 3, type: "PT Session", trainer: "Sarah", date: "2 days ago" },
     ],
   }
@@ -62,10 +62,10 @@ export default function Dashboard() {
                 </div>
               </div>
               <Button
-                variant="outline"
-                className="border-[#D7AD41] text-[#D7AD41] hover:bg-[#D7AD41] hover:text-[#101010] h-10 px-4 rounded-lg"
+                className="h-14 bg-[#D7AD41] text-[#101010] hover:bg-[#D7AD41]/90 rounded-xl font-medium shadow-md"
                 onClick={() => router.push("/invoices")}
               >
+                <FileText className="mr-2 h-5 w-5" />
                 Pay Now
               </Button>
             </CardContent>

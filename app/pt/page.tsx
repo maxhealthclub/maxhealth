@@ -137,9 +137,7 @@ export default function PTSessionsPage() {
               </div>
               <div className="mt-4 flex justify-end">
                 <Button
-                  variant="outline"
-                  size="sm"
-                  className="border-[#D7AD41] text-[#D7AD41] hover:bg-[#D7AD41] hover:text-[#101010]"
+                  className="bg-[#D7AD41] text-[#101010] hover:bg-[#D7AD41]/90"
                 >
                   <MessageSquare className="h-4 w-4 mr-2" />
                   Contact Trainer
