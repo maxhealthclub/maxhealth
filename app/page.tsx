@@ -1,242 +1,165 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import { useState } from "react"
 import { useRouter } from "next/navigation"
-import {
-  Dumbbell,
-  FileText,
-  Wallet,
-  Home,
-  User,
-  CreditCard,
-  AlertTriangle,
-} from "lucide-react"
-import { Card, CardContent } from "@/components/ui/card"
+import { CreditCard, Dumbbell, FileText, Home, User, Wallet } from "lucide-react"
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Button } from "@/components/ui/button"
+import { Card, CardContent, CardDescription, CardTitle } from "@/components/ui/card"
 import { useLanguage } from "./contexts/LanguageContext"
 
-export default function HomePage() {
-  const router = useRouter()
+export default function Dashboard() {
   const [activeTab, setActiveTab] = useState("home")
-  const [isDarkMode, setIsDarkMode] = useState(() => {
-    if (typeof window !== 'undefined') {
-      const savedMode = localStorage.getItem('darkMode')
-      if (savedMode === null) {
-        localStorage.setItem('darkMode', 'true')
-        return true
-      }
-      return savedMode === 'true'
-    }
-    return true
-  })
+  const router = useRouter()
   const { language, translations } = useLanguage()
   const t = translations[language]
 
-  // Mock data for recent activity and user info
+  // Mock user data
   const userData = {
-    membership: {
-      type: "Stay Fit",
-      price: 99.5,
-      nextPayment: "May 1, 2025"
-    },
-    unpaidInvoices: {
-      count: 1,
-      amount: 99.5,
-      dueDate: "May 1, 2025"
-    }
-  }
-
-  const recentActivity = {
-    lastPT: {
-      date: "2 days ago",
-      trainer: "Jeroen van Rooien",
-      type: "Strength Training"
-    },
-    lastBarPurchase: {
-      date: "3 days ago",
-      items: ["Protein Shake", "Energy Bar"],
-      total: "€12.50"
-    }
+    firstName: "Thomas",
+    profileImage: "/placeholder.svg?height=40&width=40",
+    unpaidBalance: 54.0,
+    barCredit: 12.5,
+    ptSessionsLeft: 2,
+    recentActivity: [
+      { id: 1, type: "Bar Purchase", amount: 8.5, date: "Today, 14:30" },
+      { id: 2, type: "Invoice #1234", amount: 54.0, status: "Unpaid", date: "Yesterday" },
+      { id: 3, type: "PT Session", trainer: "Sarah", date: "2 days ago" },
+    ],
   }
 
   const handleNavigation = (path: string, tabId: string) => {
-    router.push(path)
     setActiveTab(tabId)
+    router.push(path)
   }
 
   return (
-    <div className={`flex flex-col min-h-screen ${isDarkMode ? 'bg-[#101010] text-white' : 'bg-white text-[#101010]'}`}>
+    <div className="flex flex-col min-h-screen bg-[#101010] text-white">
       {/* Header with safe area padding for notch */}
-      <header className={`pt-12 pb-4 px-5 flex items-center justify-between ${isDarkMode ? 'bg-[#101010]' : 'bg-white'} sticky top-0 z-10`}>
-        <h1 className="text-xl font-semibold">{t.welcome}</h1>
+      <header className="pt-12 pb-4 px-5 flex items-center justify-between bg-[#101010] sticky top-0 z-10">
+        <h1 className="text-xl font-semibold">Welcome back, {userData.firstName}!</h1>
+        <Avatar className="h-10 w-10 border-2 border-[#D7AD41]">
+          <AvatarImage src={userData.profileImage || "/placeholder.svg"} alt={userData.firstName} />
+          <AvatarFallback className="bg-[#D7AD41] text-[#101010] font-medium">
+            {userData.firstName.charAt(0)}
+          </AvatarFallback>
+        </Avatar>
       </header>
 
       {/* Main Content - Scrollable area */}
       <main className="flex-1 px-5 pb-28 overflow-auto">
-        {/* Membership Status */}
-        <div className="mb-6">
-          <Card className={`${isDarkMode ? 'bg-[#1A1A1A] text-white' : 'bg-gray-50 text-[#101010]'} border-none rounded-xl shadow-lg`}>
-            <CardContent className="p-4">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-sm text-gray-400">{t.membership}</p>
-                  <p className="text-lg font-semibold">{userData.membership.type}</p>
-                  <p className={`text-sm ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>
-                    Next payment: {userData.membership.nextPayment}
-                  </p>
+        {/* Summary Cards */}
+        <div className="space-y-4 mb-6">
+          <Card className="bg-[#1A1A1A] border-none text-white rounded-xl shadow-lg">
+            <CardContent className="p-4 flex items-center justify-between">
+              <div className="flex items-center gap-3">
+                <div className="bg-[#D7AD41]/20 p-2.5 rounded-full">
+                  <FileText className="h-6 w-6 text-[#D7AD41]" />
                 </div>
-                <div className="text-right">
-                  <p className="text-sm text-gray-400">{t.membershipPrice}</p>
-                  <p className="text-lg font-semibold">€{userData.membership.price.toFixed(2)}</p>
-                  <p className="text-sm text-gray-400">/month</p>
+                <div>
+                  <CardDescription className="text-gray-400 text-sm">Unpaid Balance</CardDescription>
+                  <CardTitle className="text-xl font-semibold">€{userData.unpaidBalance.toFixed(2)}</CardTitle>
                 </div>
               </div>
+              <Button
+                variant="outline"
+                className="border-[#D7AD41] text-[#D7AD41] hover:bg-[#D7AD41] hover:text-[#101010] h-10 px-4 rounded-lg"
+                onClick={() => router.push("/invoices")}
+              >
+                Pay Now
+              </Button>
             </CardContent>
           </Card>
-        </div>
 
-        {/* Unpaid Invoices */}
-        {userData.unpaidInvoices.count > 0 && (
-          <div className="mb-6">
-            <Card className={`${isDarkMode ? 'bg-[#1A1A1A] text-white' : 'bg-gray-50 text-[#101010]'} border-none rounded-xl shadow-lg`}>
+          <div className="grid grid-cols-2 gap-4">
+            <Card className="bg-[#1A1A1A] border-none text-white rounded-xl shadow-lg">
               <CardContent className="p-4">
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-3">
-                    <div className="bg-red-500/20 p-2 rounded-full">
-                      <AlertTriangle className="h-5 w-5 text-red-500" />
-                    </div>
-                    <div>
-                      <p className="font-medium">{t.unpaidInvoices}</p>
-                      <p className={`text-sm ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>
-                        {userData.unpaidInvoices.count} {userData.unpaidInvoices.count === 1 ? 'invoice' : 'invoices'} • Due {userData.unpaidInvoices.dueDate}
-                      </p>
-                    </div>
+                <div className="flex flex-col gap-2">
+                  <div className="bg-[#D7AD41]/20 p-2.5 rounded-full w-fit">
+                    <Wallet className="h-5 w-5 text-[#D7AD41]" />
                   </div>
-                  <Button 
-                    className="bg-[#D7AD41] text-[#101010] hover:bg-[#D7AD41]/90"
-                    onClick={() => router.push('/invoices')}
-                  >
-                    Pay Now
-                  </Button>
+                  <CardDescription className="text-gray-400 text-sm">Bar Saldo</CardDescription>
+                  <CardTitle className="text-xl font-semibold">€{userData.barCredit.toFixed(2)}</CardTitle>
                 </div>
               </CardContent>
             </Card>
-          </div>
-        )}
 
-        {/* Quick Actions */}
-        <div className="mb-6">
-          <h2 className="text-lg font-semibold mb-3">{t.quickActions}</h2>
-          <div className="grid grid-cols-2 gap-3">
-            <Card 
-              className={`${isDarkMode ? 'bg-[#1A1A1A] text-white hover:bg-[#252525]' : 'bg-gray-50 text-[#101010] hover:bg-gray-100'} border-none rounded-xl shadow-lg cursor-pointer transition-colors`}
-              onClick={() => router.push('/pt')}
-            >
+            <Card className="bg-[#1A1A1A] border-none text-white rounded-xl shadow-lg">
               <CardContent className="p-4">
-                <div className="flex flex-col items-center text-center gap-2">
-                  <div className="bg-[#D7AD41]/20 p-2 rounded-full">
+                <div className="flex flex-col gap-2">
+                  <div className="bg-[#D7AD41]/20 p-2.5 rounded-full w-fit">
                     <Dumbbell className="h-5 w-5 text-[#D7AD41]" />
                   </div>
-                  <p className="font-medium">{t.bookPT}</p>
-                </div>
-              </CardContent>
-            </Card>
-
-            <Card 
-              className={`${isDarkMode ? 'bg-[#1A1A1A] text-white hover:bg-[#252525]' : 'bg-gray-50 text-[#101010] hover:bg-gray-100'} border-none rounded-xl shadow-lg cursor-pointer transition-colors`}
-              onClick={() => router.push('/invoices')}
-            >
-              <CardContent className="p-4">
-                <div className="flex flex-col items-center text-center gap-2">
-                  <div className="bg-[#D7AD41]/20 p-2 rounded-full">
-                    <FileText className="h-5 w-5 text-[#D7AD41]" />
-                  </div>
-                  <p className="font-medium">{t.viewInvoices}</p>
+                  <CardDescription className="text-gray-400 text-sm">PT Sessions Left</CardDescription>
+                  <CardTitle className="text-xl font-semibold">{userData.ptSessionsLeft} sessions</CardTitle>
                 </div>
               </CardContent>
             </Card>
           </div>
+        </div>
+
+        {/* Quick Action Buttons - iOS style */}
+        <div className="grid grid-cols-2 gap-4 mb-8">
+          <Button
+            className="h-14 bg-[#D7AD41] text-[#101010] hover:bg-[#D7AD41]/90 rounded-xl font-medium shadow-md"
+            onClick={() => router.push("/invoices")}
+          >
+            <FileText className="mr-2 h-5 w-5 text-[#101010]" />
+            View Invoices
+          </Button>
+          <Button 
+            className="h-14 bg-[#D7AD41] text-[#101010] hover:bg-[#D7AD41]/90 rounded-xl font-medium shadow-md"
+            onClick={() => router.push("/pt")}
+          >
+            <Dumbbell className="mr-2 h-5 w-5" />
+            Buy PT Session
+          </Button>
         </div>
 
         {/* Recent Activity */}
         <div className="mb-6">
-          <h2 className="text-lg font-semibold mb-3">{t.recentActivity}</h2>
-          <Card className={`${isDarkMode ? 'bg-[#1A1A1A] text-white' : 'bg-gray-50 text-[#101010]'} border-none rounded-xl shadow-lg`}>
-            <CardContent className="p-4">
-              <div className="space-y-4">
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-3">
-                    <div className="bg-[#D7AD41]/20 p-2 rounded-full">
-                      <Dumbbell className="h-5 w-5 text-[#D7AD41]" />
-                    </div>
+          <h2 className="text-lg font-semibold mb-3">Recent Activity</h2>
+          <div className="space-y-3">
+            {userData.recentActivity.map((activity) => (
+              <Card key={activity.id} className="bg-[#1A1A1A] border-none text-white rounded-xl shadow-md">
+                <CardContent className="p-4">
+                  <div className="flex justify-between items-center">
                     <div>
-                      <p className="font-medium">{t.lastPT}</p>
-                      <p className={`text-sm ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>
-                        {recentActivity.lastPT.date} • {recentActivity.lastPT.trainer}
-                      </p>
-                      <p className={`text-xs ${isDarkMode ? 'text-gray-500' : 'text-gray-600'}`}>
-                        {recentActivity.lastPT.type}
-                      </p>
+                      <p className="font-medium">{activity.type}</p>
+                      <p className="text-sm text-gray-400">{activity.date}</p>
                     </div>
+                    {activity.amount && (
+                      <p className={`font-semibold ${activity.status === "Unpaid" ? "text-[#D7AD41]" : "text-white"}`}>
+                        €{activity.amount.toFixed(2)}
+                      </p>
+                    )}
+                    {activity.trainer && <p className="text-sm text-gray-400">with {activity.trainer}</p>}
                   </div>
-                  <Button 
-                    variant="ghost" 
-                    size="sm" 
-                    className="text-[#D7AD41]"
-                    onClick={() => router.push('/pt')}
-                  >
-                    {t.viewDetails}
-                  </Button>
-                </div>
-
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-3">
-                    <div className="bg-[#D7AD41]/20 p-2 rounded-full">
-                      <Wallet className="h-5 w-5 text-[#D7AD41]" />
-                    </div>
-                    <div>
-                      <p className="font-medium">{t.lastBarPurchase}</p>
-                      <p className={`text-sm ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>
-                        {recentActivity.lastBarPurchase.date}
-                      </p>
-                      <p className={`text-xs ${isDarkMode ? 'text-gray-500' : 'text-gray-600'}`}>
-                        {recentActivity.lastBarPurchase.items.join(", ")} • {recentActivity.lastBarPurchase.total}
-                      </p>
-                    </div>
-                  </div>
-                  <Button 
-                    variant="ghost" 
-                    size="sm" 
-                    className="text-[#D7AD41]"
-                    onClick={() => router.push('/bar')}
-                  >
-                    {t.viewDetails}
-                  </Button>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
         </div>
       </main>
 
       {/* Bottom Navigation - iOS style with safe area padding */}
-      <nav className={`fixed bottom-0 w-full ${isDarkMode ? 'bg-[#1A1A1A] border-[#2A2A2A]' : 'bg-white border-gray-200'} border-t pb-8 pt-2 shadow-lg z-20`}>
+      <nav className="fixed bottom-0 w-full bg-[#1A1A1A] border-t border-[#2A2A2A] pb-8 pt-2 shadow-lg z-20">
         <div className="flex justify-around">
           {[
             { id: "home", icon: Home, label: t.home, path: "/" },
             { id: "invoices", icon: FileText, label: t.invoices, path: "/invoices" },
-            { id: "bar", icon: Wallet, label: t.bar, path: "/bar" },
+            { id: "bar", icon: CreditCard, label: t.bar, path: "/bar" },
             { id: "pt", icon: Dumbbell, label: t.pt, path: "/pt" },
             { id: "profile", icon: User, label: t.profile, path: "/profile" },
           ].map((item) => (
             <button
               key={item.id}
               className={`flex flex-col items-center py-2 px-5 rounded-lg ${
-                activeTab === item.id ? "text-[#D7AD41]" : isDarkMode ? "text-gray-400" : "text-gray-600"
+                activeTab === item.id ? "text-[#D7AD41]" : "text-gray-400"
               }`}
               onClick={() => handleNavigation(item.path, item.id)}
             >
-              <item.icon className={`h-6 w-6 ${activeTab === item.id ? "text-[#D7AD41]" : isDarkMode ? "text-gray-400" : "text-gray-600"}`} />
+              <item.icon className={`h-6 w-6 ${activeTab === item.id ? "text-[#D7AD41]" : "text-gray-400"}`} />
               <span className={`text-xs mt-1 ${activeTab === item.id ? "font-medium" : ""}`}>{item.label}</span>
             </button>
           ))}
