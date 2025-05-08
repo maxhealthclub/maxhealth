@@ -2,29 +2,29 @@
 
 import { createContext, useContext, useState, useEffect, ReactNode } from 'react'
 
-type Language = 'english' | 'dutch'
+export type Language = 'en' | 'nl'
 
 interface LanguageContextType {
   language: Language
   setLanguage: (lang: Language) => void
-  translations: typeof translations
+  translations: Record<Language, Record<string, string>>
 }
 
 const translations = {
-  english: {
+  en: {
     // Home page
-    welcome: "Welcome to Max Health Club",
+    welcome: "Welcome",
     membership: "Membership",
     yourTrainer: "Your Trainer",
     trainer: "Trainer",
     contact: "Contact",
     personalTraining: "Personal Training",
-    sessionsLeft: "PT sessions left",
+    sessionsLeft: "sessions left",
     financeOverview: "Finance Overview",
     unpaidInvoices: "Unpaid Invoices",
     paidInvoices: "Paid Invoices",
     barBalance: "Bar Balance",
-    settings: "Settings & Preferences",
+    settings: "Settings",
     invoiceReminders: "Invoice Reminders",
     ptSessionAlerts: "PT Session Alerts",
     language: "Language",
@@ -72,23 +72,23 @@ const translations = {
     contactTrainer: "Contact Trainer",
     basicPackage: "Basic Package",
     standardPackage: "Standard Package",
-    premiumPackage: "Premium Package",
+    premiumPackage: "Premium Package"
   },
-  dutch: {
+  nl: {
     // Home page
-    welcome: "Welkom bij Max Health Club",
+    welcome: "Welkom",
     membership: "Lidmaatschap",
     yourTrainer: "Jouw Trainer",
     trainer: "Trainer",
     contact: "Contact",
-    personalTraining: "Persoonlijke Training",
-    sessionsLeft: "PT sessies over",
+    personalTraining: "Personal Training",
+    sessionsLeft: "sessies over",
     financeOverview: "Financieel Overzicht",
     unpaidInvoices: "Openstaande Facturen",
     paidInvoices: "Betaalde Facturen",
     barBalance: "Bar Saldo",
-    settings: "Instellingen & Voorkeuren",
-    invoiceReminders: "Factuurherinneringen",
+    settings: "Instellingen",
+    invoiceReminders: "Factuur Herinneringen",
     ptSessionAlerts: "PT Sessie Meldingen",
     language: "Taal",
     darkMode: "Donkere Modus",
@@ -135,7 +135,7 @@ const translations = {
     contactTrainer: "Trainer Contacten",
     basicPackage: "Basis Pakket",
     standardPackage: "Standaard Pakket",
-    premiumPackage: "Premium Pakket",
+    premiumPackage: "Premium Pakket"
   }
 }
 
@@ -144,14 +144,10 @@ const LanguageContext = createContext<LanguageContextType | undefined>(undefined
 export function LanguageProvider({ children }: { children: ReactNode }) {
   const [language, setLanguage] = useState<Language>(() => {
     if (typeof window !== 'undefined') {
-      const savedLanguage = localStorage.getItem('language')
-      if (savedLanguage === null) {
-        localStorage.setItem('language', 'english')
-        return 'english'
-      }
-      return savedLanguage as Language
+      const savedLang = localStorage.getItem('language') as Language
+      return savedLang || 'en'
     }
-    return 'english'
+    return 'en'
   })
 
   useEffect(() => {
